@@ -1,74 +1,134 @@
 
-let num1 = '';
-let num2 = '';
-let operator = null;
+const calculator = {
+    displayValue: '0',
+    firstOperand: null,
+    waitingForSecondOperand: false,
+    operator: null,
+};
+
+//Update Display
+const updateDisplay = () => {
+    const display = document.querySelector('.bottom-screen');
+    display.textContent = calculator.displayValue
+};
+updateDisplay();
+
+//Handle Key Press
 const keys = document.querySelector('.keypad');
-const current = document.querySelector('.bottom-screen');
-const previous = document.querySelector('.top-screen')
-let previousText = String(previous.textContent)
-let shouldResetScreen = false
-const add = (num1,num2) => num1 + num2;
-const subtract = (num1,num2) => num1 - num2;
-const multiply = (num1,num2) => num1 * num2;
-const divide = (num1,num2) => num1 / num2;
 
+keys.addEventListener('click', (event) => {
+    const key = event.target
+    const type = key.dataset.type;
+    const keyValue = key.textContent
+    
+    //check if clicked element is a button
+    if(!key.closest('button')) {
+        return;
+    }  
+      
+    if(type === 'operator'){
+        handleOperator(keyValue);
+        updateDisplay();
+        return;
+    }
+    if(type === 'decimal'){
+        inputDecimal(keyValue);
+        updateDisplay();
+        return;
+    }
+    if(type === 'clear'){
+        clearCalculator();
+        updateDisplay();
+        return;
+    }
+    if(type === 'delete'){
+        backspace(); 
+        updateDisplay();
+        return;
+    }
+    
+    inputNumber(keyValue);
+    updateDisplay();
+});
 
-const updateCurrent = () => {
-    keys.addEventListener('click', (event) => {
-        let target = event.target
-        if(current.textContent === '0'){
-            resetScreen()
-        }
-        if(target.dataset.type === 'number') {
-            current.textContent = (current.textContent) + target.textContent
-        }
-        if(target.dataset.type === 'operator' && current.textContent !== '0' && operator === null) {
-            num1 = current.textContent
-            operator = target.textContent
-            previous.textContent = num1 + target.textContent
-            current.textContent = ''
-        }
-        if(target.dataset.type === 'equal') {
-            num2 = current.textContent
-            previous.textContent = previous.textContent + current.textContent
-            current.textContent = operate(operator, num1, num2)
-        }
-        if(target.dataset.type === "clear") {
-            clear()
-        }
-    })
-}
-updateCurrent()
+//Input number
+const inputNumber = (number) => {
+    const {displayValue, waitingForSecondOperand} = calculator;
+
+    if(waitingForSecondOperand === true){
+        calculator.displayValue = number;
+        calculator.waitingForSecondOperand = false
+    }else{
+        calculator.displayValue = displayValue === '0' ? number : displayValue + number;
+    }
+};
+
+//Input Decimal
+const inputDecimal = (dot) => {
+    if(calculator.waitingForSecondOperand === true) {
+        calculator.displayValue = '0.';
+        calculator.waitingForSecondOperand = false;
+        return;
+    }
+    if(!calculator.displayValue.includes(dot)){
+        calculator.displayValue += dot;
+    }
+};
+
+//Handle Operators
+const handleOperator = (nextOperator) => {
+    const {firstOperand, displayValue, operator} = calculator;
+    const inputValue = parseFloat(displayValue);
+
+    if(operator && calculator.waitingForSecondOperand) {
+        calculator.operator = nextOperator;
+        return;
+    }
+    if(firstOperand == null && !isNaN(inputValue)) {
+        calculator.firstOperand = inputValue
+    }else if (operator) {
+        const result = calculate(firstOperand, inputValue, operator)
+
+        calculator.displayValue = `${parseFloat(result.toFixed(7))}`
+        calculator.firstOperand = result;
+    }
+    calculator.waitingForSecondOperand = true;
+    calculator.operator = nextOperator;
+};
 
 
 function clear() {
-    current.textContent = '0';
+    displayValue = '0';
     previous.textContent = '';
-    num1 = '';
-    num2 = '';
+    firstOperand = '';
+    secondOperand = '';
     operator = null;
 }
 
-function resetScreen() {
-    current.textContent = ''
-    shouldResetScreen = false
-  }
+// Calculator logic
+const calculate = (firstOperand, secondOperand, operator) => {
+    if(operator === '+') {
+        return firstOperand + secondOperand;
+    }else if(operator === '-') {
+        return firstOperand - secondOperand;
+    }else if(operator === 'x') {
+        return firstOperand * secondOperand;
+    }else if(operator === '÷') {
+        return firstOperand / secondOperand;
+    }       
+    return secondOperand;
+};
 
-function operate(operator, num1, num2) {
-    num1 = Number(num1)
-    num2 = Number(num2)
-    
-    if(operator == '+') {
-        return add(num1, num2)
-    }else if(operator == '-') {
-        return subtract(num1, num2)
-    }else if(operator == 'x') {
-        return multiply(num1, num2)
-    }else if(operator == '÷' && num2 !== 0) {
-        return divide (num1, num2)
-    }else {
-        return null
-    }
+//Clear Calculator
+const clearCalculator = () => {
+    calculator.displayValue = '0';
+    calculator.firstOperand = null;
+    calculator.waitingForSecondOperand = false;
+    calculator.operator = null;
 }
-  
-  
+
+//Delete last digit
+const backspace = () => {
+   calculator.displayValue = calculator.displayValue.toString().slice(0, -1);
+   return calculator.displayValue
+}
