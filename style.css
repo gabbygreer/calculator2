@@ -2,6 +2,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: lightgray;
 }
 
 .calculator {
@@ -9,9 +10,10 @@ body{
     justify-content: center;
     width: 30rem;
     height: 35rem;
-    background-color: lightgreen;
+    background-color: rgb(210, 77, 90);
     flex-wrap: wrap;
     border-radius: 1rem;
+    margin: 2rem;
 }
  
 .display{
@@ -21,23 +23,12 @@ body{
     margin: 1rem;
     flex-wrap: wrap;
     padding: .8rem;
-    font-size: 3rem;
-    border: .5rem solid gray;
+    font-size: 5rem;
     justify-content: flex-end;
     align-items: flex-end;
-    background-color: lightgray;
+    background-color: rgb(130, 167, 85);
+    color: rgb(255, 255, 255);
 }
-
-/* .top-screen,
-.bottom-screen{
-    display: flex;
-    width: 100%;
-    height: 50%;
-    background-color: lightgray;
-    justify-content: flex-end;
-    align-items: flex-end;
-    padding: 1rem; 
-} */
 
 .keypad{
     display: flex;
@@ -54,7 +45,9 @@ button{
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    background-color: lightblue;
+    background-color: rgb(20, 151, 137);
+    border: 1px solid lightblue;
+    color: white;
 }
 .clear, 
 .zero {
@@ -62,17 +55,13 @@ button{
 }
 .operator,
 .equal{
-    background: lightsalmon;
-}
-
-.is-depressed{
-    background-color: lightcoral;
+    background-color: rgb(131, 38, 95);
 }
 
 button:hover{
-    background-color: rgba(255, 255, 255, .5);
+    background-color: rgba(243, 193, 100);
 }
 
 button:active{
-    background-color: rgba(186, 186, 186, 0.4);
+    background-color: rgb(189, 72, 68);
 }

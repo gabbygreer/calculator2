@@ -7,8 +7,9 @@ const calculator = {
 };
 
 //Update Display
+const display = document.querySelector('.screen');
+
 const updateDisplay = () => {
-    const display = document.querySelector('.bottom-screen');
     display.textContent = calculator.displayValue
 };
 updateDisplay();
@@ -107,15 +108,18 @@ function clear() {
 
 // Calculator logic
 const calculate = (firstOperand, secondOperand, operator) => {
-    if(operator === '+') {
+    if(firstOperand/secondOperand == Infinity || firstOperand/secondOperand == -Infinity){
+        display.textContent = 'ya boob'
+        return
+    }else if(operator === '+') {
         return firstOperand + secondOperand;
     }else if(operator === '-') {
         return firstOperand - secondOperand;
     }else if(operator === 'x') {
         return firstOperand * secondOperand;
-    }else if(operator === '÷') {
+    }else if(operator === '÷' ) {
         return firstOperand / secondOperand;
-    }       
+    }     
     return secondOperand;
 };
 
